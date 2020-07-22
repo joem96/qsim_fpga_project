@@ -1,18 +1,12 @@
 # Quantum Comp. FPGA Accelerator 
 
 
-## Table of Contents (Optional)
+## Table of Contents
+- [Directory](#directory)
+- [Vivado Build](#vivado build)
+- [Running the Project](#running the project)
 
-> If your `README` has a lot of info, section headers might be nice.
-
-- [Installation](#installation)
-- [Features](#features)
-- [Contributing](#contributing)
-- [Team](#team)
-- [FAQ](#faq)
-- [Support](#support)
-- [License](#license)
-
+#Directory
 |-- attr
 |-- cwd -> /proc
 |-- fd
@@ -40,3 +34,7 @@
         | `-- 3 -> /proc/15589/task/15589/fd
         |-- fdinfo
         `-- root -> /
+
+#Vivado Build
+
+#Running the Project
