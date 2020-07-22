@@ -1,39 +1,33 @@
 # Quantum Comp. FPGA Accelerator 
 
 
-## Table of Contents
-- [Directory](#directory)
-- [Vivado Build](#vivado build)
-- [Running the Project](#running the project)
-
 ## Directory
-|-- attr
-|-- cwd -> /proc
-|-- fd
-|   `-- 3 -> /proc/15589/fd
-|-- fdinfo
-|-- net
-|   |-- dev_snmp6
-|   |-- netfilter
-|   |-- rpc
-|   |   |-- auth.rpcsec.context
-|   |   |-- auth.rpcsec.init
-|   |   |-- auth.unix.gid
-|   |   |-- auth.unix.ip
-|   |   |-- nfs4.idtoname
-|   |   |-- nfs4.nametoid
-|   |   |-- nfsd.export
-|   |   `-- nfsd.fh
-|   `-- stat
-|-- root -> /
-`-- task
-    `-- 15589
-        |-- attr
-        |-- cwd -> /proc
-        |-- fd
-        | `-- 3 -> /proc/15589/task/15589/fd
-        |-- fdinfo
-        `-- root -> /
+```.
+├── bin
+│   ├── Debug
+│   │   ├── SampleLibrary.jar
+│   │   ├── cooper.jar
+│   │   ├── sugar.data.jar
+│   │   ├── sugar.jar
+│   │   └── swift.jar
+│   └── Release
+│       ├── SampleLibrary.jar
+│       ├── cooper.jar
+│       ├── sugar.data.jar
+│       ├── sugar.jar
+│       └── swift.jar
+├── obj
+│   ├── Debug
+│   │   └── Android
+│   │       ├── ClassLibrary2.elements.FilesWrittenAbsolute.txt
+│   │       └── samplelibrary.jar
+│   └── Release
+│       └── Android
+│           ├── ClassLibrary2.elements.FilesWrittenAbsolute.txt
+│           └── samplelibrary.jar
+├── ClassLibrary2.elements
+└── ClassLibrary2.elements.user
+ ```
 
 ## Vivado Build
 
