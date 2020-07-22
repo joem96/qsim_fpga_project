@@ -1,0 +1,16 @@
+These are registers that the C++ program on the Microblaze writes/reads to/from. 
+ 
+reg0: write for reset
+reg1: write to activate config vec
+reg2: write to send vec data (32 bits)
+reg3: write to activate config brams
+reg4: write to send bram data (32 bits)
+
+reg5: (FOR DEBUG) read 32 bits of the mat_ctrl_data (512 bits in total)
+reg6: Unused
+reg7: Unused
+
+reg8: read stopwatch data;
+reg9: write to send num_comp
+reg10: write to start mult
+reg 11: read 32 bits of the comp_result_data(512 bits in total)
