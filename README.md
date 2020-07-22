@@ -6,7 +6,7 @@
 - [Vivado Build](#vivado build)
 - [Running the Project](#running the project)
 
-#Directory
+## Directory
 |-- attr
 |-- cwd -> /proc
 |-- fd
@@ -35,6 +35,6 @@
         |-- fdinfo
         `-- root -> /
 
-#Vivado Build
+## Vivado Build
 
-#Running the Project
+## Running the Project
