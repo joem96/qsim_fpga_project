@@ -28,6 +28,9 @@
           └──(vivado-generated files)
  ```
 
-## Vivado Build
+## Simulation
+While developing the RTL design in VHDL, I simultaneously tested each new component that I develop by simulating. In my tb (testbench) folder, I have a components_tb.vhd, which tests all of the smaller components that make up the top-level design. The soft_if_tb.vhd tests only soft_if.vhd (final top-level wrapper). In my questa folder, I have the two .do scripts that bring up the important signals for questasim / modelsim.
 
+## Vivado Build
+In Vivado, I first created a block diagram and added all the vivado IP's - clock/reset, Microblaze, and UART lite interface. I then added a custom IP which serves as a AXI peripheral. 
 ## Running the Project
