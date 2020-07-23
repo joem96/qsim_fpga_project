@@ -49,11 +49,11 @@ For now, to replicate this entire build, you will need to create the block diagr
 
 ## Running the Project
 To run the project, 
-- Make sure your FPGA board is configured and connected to the computer through USB.
+- make sure your FPGA board is configured and connected to the computer through USB.
 - open **src/python/QSim_UserInterface.py** and construct desired quantum circuit using symbols. 
-- Make sure your computer has access to the serial port connected to the FPGA board.
+- make sure your computer has access to the serial port connected to the FPGA board.
 - run **QSim_UserInterface.py**.
-- Wait few seconds and results will show up. 
+- wait few seconds and results will show up. 
 
 In **QSim_UserInterface.py**, I left an example circuit that implements the 5-qubit Grover's Algorithm (w/ 3 iterations). 
 
