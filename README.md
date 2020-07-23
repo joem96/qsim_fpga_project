@@ -48,6 +48,13 @@ In Vivado, I first created a block diagram, selecting arty7 board file, and adde
 For now, to replicate this entire build, you will need to create the block diagram in Vivado yourself but I have provided the **HW_Accelerator** custom IP in **vivado/ip_repo** that is part of the block diagram. The bulk of my hardware/rtl design exists in this **HW_Accelerator** IP. You will also need to create the SDK application project manually. Hopefully, in the future, I will provide a tcl script that will build the whole Vivado project.
 
 ## Running the Project
-To run the project after successfully configuring your FPGA board with the bitstream, go into **src/python/QSim_UserInterface.py** and construct a quantum circuit using symbols. I left an example circuit that implements the 5-qubit Grover's Algorithm (w/ 3 iterations). Run that Python file while making sure your FPGA board is connected to the computer w/ the USB. Upon completion of the computation, the python program will load up the results. 
+To run the project, 
+- Make sure your FPGA board is configured and connected to the computer through USB.
+- open **src/python/QSim_UserInterface.py** and construct desired quantum circuit using symbols. 
+- Make sure your computer has access to the serial port connected to the FPGA board.
+- run **QSim_UserInterface.py**.
+- Wait few seconds and results will show up. 
+
+In **QSim_UserInterface.py**, I left an example circuit that implements the 5-qubit Grover's Algorithm (w/ 3 iterations). 
 
 
