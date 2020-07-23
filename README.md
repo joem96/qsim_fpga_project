@@ -35,7 +35,7 @@
 - Python 3
 
 Note: These are the hardware & software I used for this project and other tools can definitely work. 
-- Other boards will definitely work if the FPGA is more powerful than an Artix 7 (ex. Virtex 7, Kintex 7, Ultrascale... etc). Zynq boards will also work but you will need to make some changes in the vivado design flow like replacing the Microblaze in the block diagram with the Zynq IP and possibly dealing with clock domain crossing since the Zynq will probably run at a higher speed. 
+- Boards with more powerful FPGAs than Artix 7 (Virtex 7, Kintex 7, Ultrascale... etc) will definitely work. Zynq boards will also work but you will need to make some changes in the vivado design flow like replacing the Microblaze in the block diagram with the Zynq IP and possibly dealing with clock domain crossing since the Zynq will probably run at a higher speed. 
 - Any Vivado version will work as long as Xilinx SDK is included (we need this for the software c++ development and loading of program into the Microblaze or Zynq).
 - Simulators like Questa / Modelsim are used during development but they are not needed if you want to rebuild the project. Nevertheless, I included testbenches that I designed and also scripts for QuestaSim. 
 
