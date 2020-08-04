@@ -1,10 +1,10 @@
 """
 Description: This is the python interface that the user uses. Users construct
-the quantum circuit here using symbols that represent quantum gates. state 
-holds the starting states of the qubits. init_circuit represents the circuit 
-that the qubits propagate through once. rep_circuit is the circuit that the 
-qubits propagate through multiple times (user defines how many times by 
-initializing num_reps). 
+the quantum circuit here using symbols that represent quantum gates. state
+holds the starting states of the qubits. init_circuit represents the circuit
+that the qubits propagate through once. rep_circuit is the circuit that the
+qubits propagate through multiple times (user defines how many times by
+initializing num_reps).
 
 Below is the example quantum circuit build for a 5-qubit Grover's Algorithm.
 """
@@ -12,7 +12,7 @@ Below is the example quantum circuit build for a 5-qubit Grover's Algorithm.
 #import serial
 import numpy
 import serial
-import sup_functions 
+import sup_functions
 
 #set up serial communication
 ser = serial.Serial(
@@ -39,9 +39,9 @@ rep_circuit  = numpy.array([['I', 'X', 'I', 'I', 'I']  #marked
                            ,['X', 'X', 'X', 'X', 'X']  #X
                            ,['H', 'H', 'H', 'H', 'H']  #init
                             ]);
-    
-num_reps         = 3; #range: 0 to 255 (num_reps = byte of data sent to Microblaze)
 
+#range: 0 to 255 (num_reps = byte of data sent to Microblaze)
+num_reps         = 3;
 
 
 #start the program & get results + time measurements
@@ -53,13 +53,3 @@ sup_functions.plot_stats(state,init_circuit,rep_circuit,1000);
 
 
 ser.close();
-
-
-
-            
-
-
-
-
-
-
