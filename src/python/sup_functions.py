@@ -4,6 +4,7 @@ for the main interface.
 """
 
 import numpy;
+import scipy;
 import math;
 import time;
 import matplotlib.pyplot as plt;
@@ -13,8 +14,8 @@ from matplotlib.cm import ScalarMappable;
 FPGA_CLK_SPD = 100; #100 MHz
 
 # Function to find two's complement
-# Found this function from https://www.geeksforgeeks.org/1s-2s-complement-binary-number/
-# Credits to Utkarsh Trivedi
+# Credit to Utkarsh Trivedi
+# https://www.geeksforgeeks.org/1s-2s-complement-binary-number/
 def findTwoscomplement(str):
     n = len(str)
     # Traverse the string to get first
@@ -132,6 +133,15 @@ def symb_to_gate(symb):
         'S': q0}
     return switcher.get(symb);
 
+def random_gate():
+    switcher = {
+         1 : I,
+         2 : X,
+         3 : Z,
+         4 : H}
+    rand_ind = numpy.ceil(4*numpy.random.rand(1));
+    return switcher.get(rand_ind[0]);
+
 #Given 5 qubit gates, create a stage
 def create_stage(s0, s1, s2, s3, s4):
     return numpy.kron(numpy.kron(numpy.kron(s0,s1),numpy.kron(s2,s3)),s4);
@@ -180,18 +190,18 @@ def send_vals(ser,circuit):
 
             ser.write(packet);
 
-#Send number of reps (1 byte) to serial.
-def send_num_rep(ser,reps):
+#Send number of iterations (1 byte) to serial.
+def send_num_rep(ser,itr):
 
         packet = bytearray();
-        packet.append(reps);
+        packet.append(itr);
         ser.write(packet);
 
 #Run the exact computation that is ran in Hardware but using numpy.
-def run_numpy_comp(rep_circuit_g, vec, reps):
+def run_numpy_comp(rep_circuit_g, vec, itr):
     results = vec;
     t0 = time.clock();
-    for i in range(0,reps):
+    for i in range(0,itr):
         results = numpy.dot(rep_circuit_g,results);
     tf = time.clock();
 
@@ -202,9 +212,9 @@ def run_numpy_comp(rep_circuit_g, vec, reps):
     return results[0], elap_micro;
 
 #Run the computation in numpy but iteratively, each time with an increasing
-#number of reps (0 to rep_range). At each iteration, run the same computation
-#20 times and average the computation time. Return an array of the average
-#computation times.
+#number of iterations (0 to rep_range). At each iteration, run the same
+#computation 20 times and average the computation time. Return an array of
+#the average computation times.
 def run_all_numpy_comp(rep_circuit_g, vec, rep_range):
 
     num_runs = 20;
@@ -239,14 +249,14 @@ def run_all_fpga_comp(rep_range):
 
 #Given the initial state, initial circuit, repetitive circuit, all of which
 #are given in symbols, and the number of
-#reps, run the program: construct the vector and send it to Microblaze /
+#iterations, run the program: construct the vector and send it to Microblaze /
 #Hardware. Construct the repetitive circuit and send it to Microblaze /
 #Hardware. Wait for hardware to finish running and then start receiving
 #and storing the results. In addition, run the same computation without
 #hardware and instead just in software (numpy-powered) and store the
 #results. Return the results from both hardware comp and python comp, including
 #the computation time measurements for both.
-def start_program(ser,state,init_circuit,rep_circuit,num_reps):
+def start_program(ser,state,init_circuit,rep_circuit, itr):
 
     #create starting state
     state_g = create_vector(state);
@@ -265,7 +275,7 @@ def start_program(ser,state,init_circuit,rep_circuit,num_reps):
     send_vals(ser,rep_circuit_g);
 
     #send number of repetitions
-    send_num_rep(ser,num_reps);
+    send_num_rep(ser,itr);
 
     #create a result array to store computation results & comp time measurements
     results = numpy.zeros(32);
@@ -299,7 +309,7 @@ def start_program(ser,state,init_circuit,rep_circuit,num_reps):
             break;
 
     #do the equivalent numpy computation inorder to compare computation times
-    results_np_p, time_meas[1] = run_numpy_comp(rep_circuit_g, vec, num_reps);
+    results_np_p, time_meas[1] = run_numpy_comp(rep_circuit_g, vec, itr);
 
     #convert results into percentages
     results_p = numpy.multiply(numpy.multiply(results,results),100);
@@ -308,7 +318,7 @@ def start_program(ser,state,init_circuit,rep_circuit,num_reps):
     return results_p, results_np_p, time_meas;
 
 #This is called to plot the results from the computations.
-def plot_all(results_p, results_np_p, time_meas, num_reps):
+def plot_all(results_p, results_np_p, time_meas, itr):
 
     def autolabel(rects):
         """Attach a text label above each bar in *rects*, displaying its height."""
@@ -360,8 +370,8 @@ def plot_all(results_p, results_np_p, time_meas, num_reps):
 
     #set up stats
     textstr = '\n'.join((
-    'Circuit Repetitions:',
-    '%d' % (num_reps, ),
+    'Circuit Iterations:',
+    '%d' % (itr, ),
     ' ',
     'FPGA  Comp Time:',
     '%.4f \u03BCs' % (time_meas[0], ),
@@ -395,8 +405,79 @@ def plot_stats(state,init_circuit,rep_circuit,rep_range):
     plt.plot(np_elap_micro_all, "#30fc03", label = 'Numpy');
     plt.legend(loc="upper right");
 
-    ax.set_title('FPGA vs Numpy Computation');
-    ax.set_xlabel('# Circuit Repetitions');
+    ax.set_title('FPGA vs Numpy Computation Speed (Varying Iterations)');
+    ax.set_xlabel('# of Iterations');
     ax.set_ylabel('Time (Microsecond)');
+
+    plt.show();
+
+
+#This is called to compute the theoretical runtime of FPGA computation given
+#number of qubits, segment number (how many segments the user wants to break
+#each row of matrix into), and number of iterations.
+def fpga_time_qbit(qubits, seg, iterat):
+    cyc_to_uS = 0.01;
+    switch_1_5 = {
+    1: 2 + iterat*1 + 4 + 3,
+    2: 2 + iterat*2 + 4 + 3,
+    3: 2 + iterat*4 + 4 + 3,
+    4: 2 + iterat*8 + 4 + 3}
+    if(qubits in range(1,5)):
+        return cyc_to_uS*switch_1_5.get(qubits);
+    else:
+        add_stages = math.log2(pow(2,qubits)/seg)+1;
+        return cyc_to_uS*(add_stages + iterat*seg + 4 + 3);
+
+#This is called to college and average runtimes of Numpy computation given
+#number of qubits, number of iterations, and also how many trial runs of this
+#data collection before we want to average.
+def numpy_time_qbit(qubits, iterat, trials):
+    mat = I;
+    for i in range(0, qubits-1):
+        mat = numpy.kron(mat,random_gate());
+
+    vec = q0;
+    for i in range(0, qubits-1):
+        vec = numpy.kron(vec,q0);
+    time_data = numpy.zeros(trials);
+
+    for k in range(0, trials):
+        results = numpy.transpose(vec);
+        t0 = time.clock();
+        for j in range(0, iterat):
+            results = mat.dot(results);
+
+        tf = time.clock();
+        time_data[k] = (tf-t0)*pow(10,6);
+
+    return numpy.average(time_data);
+
+#This is called to plot a graph that compares the computation time between
+#hardware/FPGA & software/Numpy by varying the number of qubits.
+def plot_stats_qbits():
+    max_qbits = 12;
+    iterat = 100;
+    seg = 16;
+    trials = 10;
+
+    np_times_qb = numpy.zeros(max_qbits);
+    fpga_times_qb = numpy.zeros(max_qbits);
+    for i in range(0, max_qbits):
+        np_times_qb[i] = numpy_time_qbit(i+1, iterat, trials);
+        fpga_times_qb[i] = fpga_time_qbit(i+1, seg, iterat);
+
+    np_times_qb = np_times_qb/1000000;
+    fpga_times_qb = fpga_times_qb/1000000;
+
+    fig, ax = plt.subplots(figsize=(14,8));
+
+    x = numpy.arange(1,max_qbits+1);
+    plt.plot(x,fpga_times_qb, "#2dd4e3", label = 'FPGA');
+    plt.plot(x,np_times_qb, "#30fc03", label = 'Numpy');
+    plt.legend(loc="upper right");
+
+    ax.set_title('FPGA vs Numpy Computation Speed (Varying Qubits)');
+    ax.set_xlabel('# of qubits');
+    ax.set_ylabel('Time (Seconds)');
 
     plt.show();

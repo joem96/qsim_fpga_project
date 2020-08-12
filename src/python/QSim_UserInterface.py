@@ -40,16 +40,16 @@ rep_circuit  = numpy.array([['I', 'X', 'I', 'I', 'I']  #marked
                            ,['H', 'H', 'H', 'H', 'H']  #init
                             ]);
 
-#range: 0 to 255 (num_reps = byte of data sent to Microblaze)
-num_reps         = 3;
+itr = 3; #range: 0 to 255 (num of iterations = byte of data sent to Microblaze)
+
 
 
 #start the program & get results + time measurements
-results_p, results_np_p, time_meas = sup_functions.start_program(ser,state,init_circuit,rep_circuit,num_reps);
+results_p, results_np_p, time_meas = sup_functions.start_program(ser,state,init_circuit,rep_circuit,itr);
 
 #plot
-sup_functions.plot_all(results_p, results_np_p, time_meas, num_reps);
+sup_functions.plot_all(results_p, results_np_p, time_meas, itr);
 sup_functions.plot_stats(state,init_circuit,rep_circuit,1000);
-
+sup_functions.plot_stats_qbits();
 
 ser.close();
