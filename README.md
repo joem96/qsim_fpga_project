@@ -1,5 +1,8 @@
 # Quantum Sim. FPGA Accelerator Project 
 
+## In-Depth Explanation on Project
+I wrote a blog on Medium explaning the purpose, design, overall process and results of this project. 
+Link: https://medium.com/@josephmeng96/accelerating-quantum-simulations-w-fpgas-84b09569ad0f
 
 ## Project Directory
 ```.
